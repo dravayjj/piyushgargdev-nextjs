@@ -70,27 +70,21 @@ const Terminal = () => {
   return (
     <TerminalContextProvider>
       <section className="terminal-section">
-        {/* ✅ CHANGED: marginBottom 12px -> 32px (bigger gap between heading and box) */}
-        <h2
-          className="terminal-heading"
-          style={{ marginBottom: "32px" }} // ✅ CHANGED
-        >
-          Terminal
-        </h2>
+        {/* ✅ REMOVED: the white <h2>Terminal</h2> inside the box is gone */}
 
-        {/* ✅ NEW: border, padding and left alignment for the box */}
         <div
           className="terminal-window"
           style={{
-            border: "1px solid #fff",       // ✅ NEW
-            padding: "40px 32px",           // ✅ NEW: space between border and content
-            display: "flex",                // ✅ NEW
-            justifyContent: "flex-start",   // ✅ NEW: group sits on the left
-            alignItems: "center",           // ✅ NEW
-            textAlign: "left",              // ✅ NEW
+            marginTop: "32px",             // ✅ NEW: gap between the green "Terminal" heading and the box
+            border: "1px solid #fff",
+            padding: "12px 16px",          // ✅ CHANGED: small padding so content sits close to the corner
+            display: "flex",
+            justifyContent: "flex-start",  // ✅ CHANGED: content stays on the left
+            alignItems: "flex-start",      // ✅ CHANGED: content stays at the top (upper-left corner)
+            textAlign: "left",
+            minHeight: "300px",            // ✅ NEW: keeps the box tall while the content stays at the top
           }}
         >
-          {/* ✅ NEW: wrapper keeps the whole text group together on the left */}
           <div style={{ width: "100%", textAlign: "left" }}>
             <ReactTerminal
               prompt={
