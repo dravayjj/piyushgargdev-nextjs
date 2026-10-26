@@ -69,70 +69,82 @@ const Terminal = () => {
 
   return (
     <TerminalContextProvider>
-      {/* FIX 1: Wrap the heading and terminal in one section */}
       <section className="terminal-section">
-        {/* FIX 2: Add bottom margin to separate the heading from the terminal */}
+        {/* ✅ CHANGED: marginBottom 12px -> 32px (bigger gap between heading and box) */}
         <h2
           className="terminal-heading"
-          style={{ marginBottom: "12px" }}
+          style={{ marginBottom: "32px" }} // ✅ CHANGED
         >
           Terminal
         </h2>
 
-        {/* FIX 3: Keep the terminal in its own container */}
-        <div className="terminal-window">
-          <ReactTerminal
-            prompt={
-              data && data.user
-                ? `$ ${data.user.name} >> `
-                : "$ piyushgarg-dev >> "
-            }
-            welcomeMessage={
-              <div>
-                <p>
-                  Welcome to my website! Get started by typing `help`
-                  command below
-                </p>
-              </div>
-            }
-            themes={{
-              darkDefault: {
-                themeBGColor: "",
-                themeToolbarColor: "",
-                themeColor: "#38CC77",
-                themePromptColor: "#fff",
-              },
-            }}
-            theme="darkDefault"
-            commands={{
-              ...Object.keys(terminalCommands).reduce(
-                (commands, key) => ({
-                  ...commands,
-                  [key]: terminalCommands[key].action,
-                }),
-                {}
-              ),
-              help: (
-                <div style={{ marginTop: "5px" }}>
-                  <p>Available Commands:</p>
-
-                  {Object.keys(terminalCommands).map((key) => (
-                    <p key={key}>
-                      <span style={{ color: "#38CC77" }}>
-                        {key}:
-                      </span>{" "}
-                      {terminalCommands[key].help}
-                    </p>
-                  ))}
-
+        {/* ✅ NEW: border, padding and left alignment for the box */}
+        <div
+          className="terminal-window"
+          style={{
+            border: "1px solid #fff",       // ✅ NEW
+            padding: "40px 32px",           // ✅ NEW: space between border and content
+            display: "flex",                // ✅ NEW
+            justifyContent: "flex-start",   // ✅ NEW: group sits on the left
+            alignItems: "center",           // ✅ NEW
+            textAlign: "left",              // ✅ NEW
+          }}
+        >
+          {/* ✅ NEW: wrapper keeps the whole text group together on the left */}
+          <div style={{ width: "100%", textAlign: "left" }}>
+            <ReactTerminal
+              prompt={
+                data && data.user
+                  ? `$ ${data.user.name} >> `
+                  : "$ piyushgarg-dev >> "
+              }
+              welcomeMessage={
+                <div>
                   <p>
-                    <span style={{ color: "#38CC77" }}>clear:</span>{" "}
-                    clears out everything on screen!
+                    Welcome to my website! Get started by typing `help`
+                    command below
                   </p>
                 </div>
-              ),
-            }}
-          />
+              }
+              themes={{
+                darkDefault: {
+                  themeBGColor: "",
+                  themeToolbarColor: "",
+                  themeColor: "#38CC77",
+                  themePromptColor: "#fff",
+                },
+              }}
+              theme="darkDefault"
+              commands={{
+                ...Object.keys(terminalCommands).reduce(
+                  (commands, key) => ({
+                    ...commands,
+                    [key]: terminalCommands[key].action,
+                  }),
+                  {}
+                ),
+                help: (
+                  <div style={{ marginTop: "5px" }}>
+                    <p>Available Commands:</p>
+
+                    {Object.keys(terminalCommands).map((key) => (
+                      <p key={key}>
+                        <span style={{ color: "#38CC77" }}>
+                          {key}:
+                        </span>{" "}
+                        {terminalCommands[key].help}
+                      </p>
+                    ))}
+
+                    <p>
+                      <span style={{ color: "#38CC77" }}>clear:</span>{" "}
+                      clears out everything on screen!
+                    </p>
+                  </div>
+                ),
+              }}
+            />
+          </div>
         </div>
       </section>
     </TerminalContextProvider>
