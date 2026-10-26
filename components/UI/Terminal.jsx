@@ -5,10 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 const Terminal = () => {
   const { data } = useSession();
 
-  const isLoggedIn = React.useMemo(
-    () => Boolean(data && data.user),
-    [data]
-  );
+  const isLoggedIn = React.useMemo(() => Boolean(data && data.user), [data]);
 
   const terminalCommands = React.useMemo(() => {
     return {
@@ -19,9 +16,7 @@ const Terminal = () => {
         ) : (
           <div>
             <p>You need to be signed in to use this command!</p>
-            <span style={{ color: "#38CC77" }}>
-              Just type `sign-in`
-            </span>
+            <span style={{ color: "#38CC77" }}>Just type `sign-in`</span>
           </div>
         ),
       },
@@ -30,7 +25,7 @@ const Terminal = () => {
         help: "Redirects you to the login page",
         action: isLoggedIn ? (
           <div>
-            <p>You Are Already Signed In</p>
+            <p>You Are Alredy Signed In</p>
           </div>
         ) : (
           signIn
@@ -42,9 +37,7 @@ const Terminal = () => {
         action: !isLoggedIn ? (
           <div>
             <p>You need to be signed in to use this command!</p>
-            <span style={{ color: "#38CC77" }}>
-              Just type `sign-in`
-            </span>
+            <span style={{ color: "#38CC77" }}>Just type `sign-in`</span>
           </div>
         ) : (
           signOut
@@ -54,7 +47,7 @@ const Terminal = () => {
       "get-location": {
         help: "Gets your current location",
         action: async () =>
-          new Promise((resolve) =>
+          new Promise((resolve, reject) =>
             navigator.geolocation.getCurrentPosition(
               (pos) =>
                 resolve(
@@ -69,78 +62,52 @@ const Terminal = () => {
 
   return (
     <TerminalContextProvider>
-      <section className="terminal-section">
-        {/* ✅ REMOVED: the white <h2>Terminal</h2> inside the box is gone */}
-
-        <div
-          className="terminal-window"
-          style={{
-            marginTop: "32px",             // ✅ NEW: gap between the green "Terminal" heading and the box
-            border: "1px solid #fff",
-            padding: "12px 16px",          // ✅ CHANGED: small padding so content sits close to the corner
-            display: "flex",
-            justifyContent: "flex-start",  // ✅ CHANGED: content stays on the left
-            alignItems: "flex-start",      // ✅ CHANGED: content stays at the top (upper-left corner)
-            textAlign: "left",
-            minHeight: "300px",            // ✅ NEW: keeps the box tall while the content stays at the top
-          }}
-        >
-          <div style={{ width: "100%", textAlign: "left" }}>
-            <ReactTerminal
-              prompt={
-                data && data.user
-                  ? `$ ${data.user.name} >> `
-                  : "$ piyushgarg-dev >> "
-              }
-              welcomeMessage={
-                <div>
-                  <p>
-                    Welcome to my website! Get started by typing `help`
-                    command below
-                  </p>
-                </div>
-              }
-              themes={{
-                darkDefault: {
-                  themeBGColor: "",
-                  themeToolbarColor: "",
-                  themeColor: "#38CC77",
-                  themePromptColor: "#fff",
-                },
-              }}
-              theme="darkDefault"
-              commands={{
-                ...Object.keys(terminalCommands).reduce(
-                  (commands, key) => ({
-                    ...commands,
-                    [key]: terminalCommands[key].action,
-                  }),
-                  {}
-                ),
-                help: (
-                  <div style={{ marginTop: "5px" }}>
-                    <p>Available Commands:</p>
-
-                    {Object.keys(terminalCommands).map((key) => (
-                      <p key={key}>
-                        <span style={{ color: "#38CC77" }}>
-                          {key}:
-                        </span>{" "}
-                        {terminalCommands[key].help}
-                      </p>
-                    ))}
-
-                    <p>
-                      <span style={{ color: "#38CC77" }}>clear:</span>{" "}
-                      clears out everything on screen!
-                    </p>
-                  </div>
-                ),
-              }}
-            />
+      <ReactTerminal
+        prompt={
+          data && data.user ? `$ ${data.user.name} >> ` : "$ piyushgarg-dev >> "
+        }
+        welcomeMessage={
+          <div>
+            <p>
+              Welcome to my website! Get started by typing `help` command below
+            </p>
+            {/* <p>
+              <span style={{ color: "#38CC77" }}>Pro Tip:</span> Hack this
+              terminal and you{"'"}ll get FREE access to my courses :)
+            </p> */}
           </div>
-        </div>
-      </section>
+        }
+        themes={{
+          darkDefault: {
+            themeBGColor: "",
+            themeToolbarColor: "",
+            themeColor: "#38CC77",
+            themePromptColor: "#fff",
+          },
+        }}
+        theme="darkDefault"
+        commands={{
+          ...Object.keys(terminalCommands).reduce(
+            (b, key) => ({ ...b, [key]: terminalCommands[key].action }),
+            {}
+          ),
+          help: (
+            <div style={{ marginTop: "5px" }}>
+              <p>Available Commands:</p>
+              {Object.keys(terminalCommands).map((key) => (
+                <p key={key}>
+                  <span style={{ color: "#38CC77" }}>{key}:</span>{" "}
+                  {terminalCommands[key].help}
+                </p>
+              ))}
+              <p>
+                <span style={{ color: "#38CC77" }}>clear:</span> clears out
+                everything on screen!
+              </p>
+            </div>
+          ),
+        }}
+      />
     </TerminalContextProvider>
   );
 };
